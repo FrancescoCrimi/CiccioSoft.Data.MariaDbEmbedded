@@ -8,16 +8,16 @@ using System;
 using System.Runtime.InteropServices;
 using System.Text;
 using CiccioSoft.MariaDb.Interop.Native;
-using Microsoft.Win32.SafeHandles;
 
 namespace CiccioSoft.MariaDb.Interop;
 
-internal sealed class MySqlHandle : SafeHandleZeroOrMinusOneIsInvalid
+internal sealed class MySqlHandle : SafeHandle
 {
-    internal MySqlHandle(nint ptr) : base(true)
+    internal MySqlHandle(nint ptr) : base(ptr, true)
     {
-        SetHandle(ptr);
     }
+
+    public override bool IsInvalid => handle == nint.Zero;
 
     protected override bool ReleaseHandle()
     {

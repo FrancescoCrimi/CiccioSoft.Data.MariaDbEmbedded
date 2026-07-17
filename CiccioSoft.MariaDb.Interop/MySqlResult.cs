@@ -5,17 +5,18 @@
 // https://opensource.org/licenses/MIT.
 
 using System;
+using System.Runtime.InteropServices;
 using CiccioSoft.MariaDb.Interop.Native;
-using Microsoft.Win32.SafeHandles;
 
 namespace CiccioSoft.MariaDb.Interop;
 
-internal sealed class MySqlResultHandle : SafeHandleZeroOrMinusOneIsInvalid
+internal sealed class MySqlResultHandle : SafeHandle
 {
-    internal MySqlResultHandle(nint ptr) : base(true)
+    internal MySqlResultHandle(nint ptr) : base(ptr, true)
     {
-        SetHandle(ptr);
     }
+
+    public override bool IsInvalid => handle == nint.Zero;
 
     protected override bool ReleaseHandle()
     {

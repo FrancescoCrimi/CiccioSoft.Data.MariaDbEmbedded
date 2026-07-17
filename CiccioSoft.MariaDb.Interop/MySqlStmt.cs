@@ -5,17 +5,18 @@
 // https://opensource.org/licenses/MIT.
 
 using System;
-using Microsoft.Win32.SafeHandles;
 using CiccioSoft.MariaDb.Interop.Native;
+using System.Runtime.InteropServices;
 
 namespace CiccioSoft.MariaDb.Interop;
 
-internal class MySqlStmtHandle : SafeHandleZeroOrMinusOneIsInvalid
+internal class MySqlStmtHandle : SafeHandle
 {
-    internal MySqlStmtHandle(nint ptr) : base(true)
+    internal MySqlStmtHandle(nint ptr) : base(ptr, true)
     {
-        SetHandle(ptr);
     }
+
+    public override bool IsInvalid => handle == nint.Zero;
 
     protected override bool ReleaseHandle()
     {
@@ -162,7 +163,7 @@ public sealed unsafe class MySqlStmt : IDisposable
     /// </summary>
     public void FetchColumn(MySqlBind bind, uint column, uint offset = 0)
     {
-        EnsureNotDisposed();        
+        EnsureNotDisposed();
         fixed (MySqlBindNative* ptr = &bind.Native)
         {
             int rc = MariadbStmtNative.mysql_stmt_fetch_column(_handle.DangerousGetHandle(), ptr, column, offset);
