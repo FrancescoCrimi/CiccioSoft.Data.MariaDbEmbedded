@@ -1,0 +1,67 @@
+# =======================================================
+# Configurazione per ClangSharpPInvokeGenerator
+# Generazione binding MariaDb nativi
+# =======================================================
+
+# File sorgente C/C++ di input
+--file
+../include/mysql.h
+
+# Forza ClangSharp a elaborare e generare binding anche per i file inclusi (#include)
+--traverse
+../include/mariadb_ctype.h
+
+# Output finale del codice generato
+--output
+../Native
+
+# Namespace C# di destinazione
+--namespace
+CiccioSoft.Interop.MariaDb.Native
+
+# Nome della DLL/libreria nativa inserito nei [DllImport] (es. sqlite3)
+--libraryPath
+libmariadb
+
+# Nome della classe statica C# che conterrà i metodi P/Invoke generati
+--methodClassName
+MariadbCTypeNative
+
+# Linguaggio del codice sorgente di input da analizzare ('c' o 'c++')
+--language
+c
+
+# Modificatore di accesso per i tipi e metodi C# generati (public/internal)
+--with-access-specifier
+*=internal
+MySqlOption=public
+MySqlFieldTypes=public
+
+# Esclude specifiche funzioni, struct o macro dalla generazione (Sintassi: nome)
+--exclude
+MARIADB_X509_INFO
+ma_charset_info_st
+mysql_fetch_field
+st_mysql
+st_mysql_res
+st_mysql_stmt
+
+# Rinomina un tipo nativo in un nome C# personalizzato (Sintassi: vecchio=nuovo)
+--remap
+enum_field_types=MySqlFieldTypes
+ma_charset_info_st*=nint
+mysql_fetch_field*=nint
+mysql_option=MySqlOption
+st_mysql*=nint
+st_mysql_bind=MySqlBindNative
+st_mysql_field=MySqlFieldNative
+st_mysql_res*=nint
+st_mysql_stmt*=nint
+MYSQL_ROW=nint
+char=byte
+
+# Passa opzioni di configurazione avanzate
+--config
+multi-file
+generate-helper-types
+generate-macro-bindings
