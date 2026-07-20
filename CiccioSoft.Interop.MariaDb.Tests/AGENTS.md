@@ -1,14 +1,14 @@
 ---
-name: CiccioSoft.MariaDb.Interop.Tests
+name: CiccioSoft.Interop.MariaDb.Tests
 description: "Istruzioni specifiche per il progetto di test dell’Interop."
 ---
 
-# Istruzioni per il progetto CiccioSoft.MariaDb.Interop.Tests
+# Istruzioni per il progetto CiccioSoft.Interop.MariaDb.Tests
 
 ## Scopo
 
 - Questo progetto contiene i test dell’interoperabilità con MariaDB Connector/C.
-- Verifica comportamenti, eccezioni e wrapper nativi del layer `CiccioSoft.MariaDb.Interop`.
+- Verifica comportamenti, eccezioni e wrapper nativi del layer `CiccioSoft.Interop.MariaDb`.
 
 ## Cose importanti
 
@@ -18,7 +18,7 @@ description: "Istruzioni specifiche per il progetto di test dell’Interop."
 ## Comandi utili
 
 - Eseguire i test interop:
-  - `dotnet test CiccioSoft.MariaDb.Interop.Tests/CiccioSoft.MariaDb.Interop.Tests.csproj`
+  - `dotnet test CiccioSoft.Interop.MariaDb.Tests/CiccioSoft.Interop.MariaDb.Tests.csproj`
 
 ## Lingua
 

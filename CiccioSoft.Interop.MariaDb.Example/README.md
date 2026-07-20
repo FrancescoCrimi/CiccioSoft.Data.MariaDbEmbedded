@@ -1,6 +1,6 @@
-# CiccioSoft.MariaDb.Interop.Example
+# CiccioSoft.Interop.MariaDb.Example
 
-This project contains a didactic example that demonstrates how to use the `CiccioSoft.MariaDb.Interop` layer.
+This project contains a didactic example that demonstrates how to use the `CiccioSoft.Interop.MariaDb` layer.
 
 ## Purpose
 
@@ -25,7 +25,7 @@ To keep the sample maintainable, responsibilities are separated:
 3. Run the example:
 
 ```bash
-dotnet run --project CiccioSoft.MariaDb.Interop.Example/CiccioSoft.MariaDb.Interop.Example.csproj
+dotnet run --project CiccioSoft.Interop.MariaDb.Example/CiccioSoft.Interop.MariaDb.Example.csproj
 ```
 
 ## Notes

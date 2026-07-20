@@ -24,7 +24,7 @@ This document captures development guidelines for the `CiccioSoft.Data.MariaDb` 
 ## 3. Separation of concerns
 
 - High-level provider logic lives in `CiccioSoft.Data.MariaDb`.
-- Native interop details live in `CiccioSoft.MariaDb.Interop`.
+- Native interop details live in `CiccioSoft.Interop.MariaDb`.
 - The provider should depend on the interop layer, not on native APIs directly.
 
 ## 4. Naming and idiomatic design

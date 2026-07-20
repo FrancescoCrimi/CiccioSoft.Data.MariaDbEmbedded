@@ -1,5 +1,5 @@
 ---
-name: CiccioSoft.MariaDb.Interop
+name: CiccioSoft.Interop.MariaDb
 description: "Istruzioni specifiche per il progetto di interoperabilità con MariaDB Connector/C."
 ---
 
@@ -22,9 +22,9 @@ description: "Istruzioni specifiche per il progetto di interoperabilità con Mar
 ## Comandi utili
 
 - Compilare il progetto:
-  - `dotnet build CiccioSoft.MariaDb.Interop/CiccioSoft.MariaDb.Interop.csproj`
+  - `dotnet build CiccioSoft.Interop.MariaDb/CiccioSoft.Interop.MariaDb.csproj`
 - Eseguire i test interop:
-  - `dotnet test CiccioSoft.MariaDb.Interop.Tests/CiccioSoft.MariaDb.Interop.Tests.csproj`
+  - `dotnet test CiccioSoft.Interop.MariaDb.Tests/CiccioSoft.Interop.MariaDb.Tests.csproj`
 
 ## Lingua
 
