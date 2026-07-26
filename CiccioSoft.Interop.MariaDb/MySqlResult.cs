@@ -5,26 +5,9 @@
 // https://opensource.org/licenses/MIT.
 
 using System;
-using System.Runtime.InteropServices;
 using CiccioSoft.Interop.MariaDb.Native;
 
 namespace CiccioSoft.Interop.MariaDb;
-
-internal sealed class MySqlResultHandle : SafeHandle
-{
-    internal MySqlResultHandle(nint ptr) : base(ptr, true)
-    {
-    }
-
-    public override bool IsInvalid => handle == nint.Zero;
-
-    protected override bool ReleaseHandle()
-    {
-        if (handle != 0)
-            MySqlNative.mysql_free_result(handle);
-        return true;
-    }
-}
 
 public sealed unsafe class MySqlResult : IDisposable
 {
@@ -44,7 +27,7 @@ public sealed unsafe class MySqlResult : IDisposable
         get
         {
             EnsureNotDisposed();
-            return MySqlNative.mysql_num_rows(_handle.DangerousGetHandle());
+            return MySqlNative.mysql_num_rows(_handle.AsStructPointer());
         }
     }
 
@@ -53,7 +36,7 @@ public sealed unsafe class MySqlResult : IDisposable
         get
         {
             EnsureNotDisposed();
-            return MySqlNative.mysql_num_fields(_handle.DangerousGetHandle());
+            return MySqlNative.mysql_num_fields(_handle.AsStructPointer());
         }
     }
 
@@ -73,8 +56,8 @@ public sealed unsafe class MySqlResult : IDisposable
     {
         EnsureNotDisposed();
 
-        // byte** r = NativeMySql.mysql_fetch_row(_handle.DangerousGetHandle());
-        nint r = MySqlNative.mysql_fetch_row(_handle.DangerousGetHandle());
+        // byte** r = NativeMySql.mysql_fetch_row(_handle.AsStructPointer());
+        nint r = MySqlNative.mysql_fetch_row(_handle.AsStructPointer());
 
         // if (r == null)
         if (r == 0)
@@ -83,7 +66,7 @@ public sealed unsafe class MySqlResult : IDisposable
             return false;
         }
 
-        uint* lengths = MySqlNative.mysql_fetch_lengths(_handle.DangerousGetHandle());
+        uint* lengths = MySqlNative.mysql_fetch_lengths(_handle.AsStructPointer());
         // uint count = NumFields;
         // row = new MySqlRow(r, lengths, count);
 
@@ -100,7 +83,7 @@ public sealed unsafe class MySqlResult : IDisposable
     public void DataSeek()
     {
         EnsureNotDisposed();
-        MySqlNative.mysql_data_seek(_handle.DangerousGetHandle(), 0);
+        MySqlNative.mysql_data_seek(_handle.AsStructPointer(), 0);
     }
 
     #endregion
@@ -122,11 +105,11 @@ public sealed unsafe class MySqlResult : IDisposable
         uint count = NumFields;
         _fieldsCache = new MySqlField[count];
 
-        MySqlFieldNative* ptr = MySqlNative.mysql_fetch_fields(_handle.DangerousGetHandle());
-        Span<MySqlFieldNative> nativeFields = new(ptr, (int)count);  //MySqlFieldNative
+        st_mysql_field* ptr = MySqlNative.mysql_fetch_fields(_handle.AsStructPointer());
+        Span<st_mysql_field> nativeFields = new(ptr, (int)count);  //MySqlFieldNative
         for (uint i = 0; i < count; i++)
         {
-            ref MySqlFieldNative f = ref nativeFields[(int)i];
+            ref st_mysql_field f = ref nativeFields[(int)i];
             _fieldsCache[i] = new MySqlField(f);
         }
 
@@ -143,8 +126,8 @@ public sealed unsafe class MySqlResult : IDisposable
         if (index >= NumFields)
             throw new ArgumentOutOfRangeException(nameof(index));
 
-        MySqlFieldNative* ptr = MySqlNative.mysql_fetch_field_direct(_handle.DangerousGetHandle(), index);
-        MySqlFieldNative nativeField = *ptr;
+        st_mysql_field* ptr = MySqlNative.mysql_fetch_field_direct(_handle.AsStructPointer(), index);
+        st_mysql_field nativeField = *ptr;
         return new MySqlField(nativeField);
     }
 

@@ -1,6 +1,6 @@
 namespace CiccioSoft.Interop.MariaDb.Native
 {
-    internal unsafe partial struct MySqlFieldNative
+    internal unsafe partial struct st_mysql_field
     {
         [NativeTypeName("char *")]
         public byte* name;

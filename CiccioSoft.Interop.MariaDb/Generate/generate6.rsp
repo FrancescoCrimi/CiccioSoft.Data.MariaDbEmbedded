@@ -39,32 +39,27 @@ MySqlFieldTypes=public
 
 # Esclude specifiche funzioni, struct o macro dalla generazione (Sintassi: nome)
 --exclude
-MARIADB_X509_INFO
-ma_charset_info_st
-mysql_fetch_field
 st_mysql
-st_mysql_res
 st_mysql_stmt
+st_mysql_res
+MARIADB_X509_INFO
+
 MARIADB_STMT_BULK_SUPPORTED
 MARIADB_STMT_BULK_UNIT_RESULTS_SUPPORTED
 CLEAR_CLIENT_STMT_ERROR
 
+# esclusa perche varadic richiedono l'abilitazione del marshalling di runtime
+stmt_set_error
+
 # Rinomina un tipo nativo in un nome C# personalizzato (Sintassi: vecchio=nuovo)
 --remap
-enum_field_types=MySqlFieldTypes
-ma_charset_info_st*=nint
-mysql_fetch_field*=nint
-mysql_option=MySqlOption
-st_mysql*=nint
-st_mysql_bind=MySqlBindNative
-st_mysql_field=MySqlFieldNative
-st_mysql_res*=nint
-st_mysql_stmt*=nint
-MYSQL_ROW=nint
 char=byte
+MYSQL_ROW=nint
+enum_field_types=MySqlFieldTypes
+mysql_option=MySqlOption
 
 # Passa opzioni di configurazione avanzate
 --config
 multi-file
-generate-helper-types
 generate-macro-bindings
+latest-codegen

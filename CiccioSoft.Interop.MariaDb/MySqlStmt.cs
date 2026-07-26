@@ -6,26 +6,8 @@
 
 using System;
 using CiccioSoft.Interop.MariaDb.Native;
-using System.Runtime.InteropServices;
 
 namespace CiccioSoft.Interop.MariaDb;
-
-internal class MySqlStmtHandle : SafeHandle
-{
-    internal MySqlStmtHandle(nint ptr) : base(ptr, true)
-    {
-    }
-
-    public override bool IsInvalid => handle == nint.Zero;
-
-    protected override bool ReleaseHandle()
-    {
-        if (handle != 0)
-            MariadbStmtNative.mysql_stmt_close(handle);
-        return true;
-    }
-}
-
 
 /// <summary>
 /// Managed wrapper for a native prepared statement (<c>MYSQL_STMT*</c>).
@@ -55,7 +37,7 @@ public sealed unsafe class MySqlStmt : IDisposable
         int rc;
         fixed (byte* p = sqlBytes)
             rc = MariadbStmtNative.mysql_stmt_prepare(
-                _handle.DangerousGetHandle(), p, (uint)(sqlBytes.Length - 1));
+                _handle.AsStructPointer(), p, (uint)(sqlBytes.Length - 1));
         if (rc != 0)
             ThrowStmtError();
     }
@@ -70,10 +52,10 @@ public sealed unsafe class MySqlStmt : IDisposable
     public void BindParam(MySqlBindBuilder binds)
     {
         EnsureNotDisposed();
-        var span = binds.GetNativeArray().AsSpan<MySqlBindNative>();
-        fixed (MySqlBindNative* ptr = span)
+        var span = binds.GetNativeArray().AsSpan<st_mysql_bind>();
+        fixed (st_mysql_bind* ptr = span)
         {
-            if (MariadbStmtNative.mysql_stmt_bind_param(_handle.DangerousGetHandle(), ptr) != 0)
+            if (MariadbStmtNative.mysql_stmt_bind_param(_handle.AsStructPointer(), ptr) != 0)
                 ThrowStmtError();
         }
     }
@@ -85,10 +67,10 @@ public sealed unsafe class MySqlStmt : IDisposable
     public void BindResult(MySqlBindBuilder binds)
     {
         EnsureNotDisposed();
-        var span = binds.GetNativeArray().AsSpan<MySqlBindNative>();
-        fixed (MySqlBindNative* ptr = span)
+        var span = binds.GetNativeArray().AsSpan<st_mysql_bind>();
+        fixed (st_mysql_bind* ptr = span)
         {
-            if (MariadbStmtNative.mysql_stmt_bind_result(_handle.DangerousGetHandle(), ptr) != 0)
+            if (MariadbStmtNative.mysql_stmt_bind_result(_handle.AsStructPointer(), ptr) != 0)
                 ThrowStmtError();
         }
     }
@@ -107,7 +89,7 @@ public sealed unsafe class MySqlStmt : IDisposable
     public void Execute()
     {
         EnsureNotDisposed();
-        if (MariadbStmtNative.mysql_stmt_execute(_handle.DangerousGetHandle()) != 0)
+        if (MariadbStmtNative.mysql_stmt_execute(_handle.AsStructPointer()) != 0)
             ThrowStmtError();
     }
 
@@ -121,7 +103,7 @@ public sealed unsafe class MySqlStmt : IDisposable
     public void StoreResult()
     {
         EnsureNotDisposed();
-        int rc = MariadbStmtNative.mysql_stmt_store_result(_handle.DangerousGetHandle());
+        int rc = MariadbStmtNative.mysql_stmt_store_result(_handle.AsStructPointer());
         if (rc != 0) ThrowStmtError();
     }
 
@@ -132,7 +114,7 @@ public sealed unsafe class MySqlStmt : IDisposable
     public void FreeResult()
     {
         EnsureNotDisposed();
-        int rc = MariadbStmtNative.mysql_stmt_free_result(_handle.DangerousGetHandle());
+        int rc = MariadbStmtNative.mysql_stmt_free_result(_handle.AsStructPointer());
         if (rc != 0) ThrowStmtError();
     }
 
@@ -149,7 +131,7 @@ public sealed unsafe class MySqlStmt : IDisposable
     public bool Fetch()
     {
         EnsureNotDisposed();
-        int rc = MariadbStmtNative.mysql_stmt_fetch(_handle.DangerousGetHandle());
+        int rc = MariadbStmtNative.mysql_stmt_fetch(_handle.AsStructPointer());
         // 0 = OK, 100 = MYSQL_NO_DATA, 101 = MYSQL_DATA_TRUNCATED
         if (rc == 0 || rc == 101) return true;
         if (rc == 100) return false;           // MYSQL_NO_DATA
@@ -164,9 +146,9 @@ public sealed unsafe class MySqlStmt : IDisposable
     public void FetchColumn(MySqlBind bind, uint column, uint offset = 0)
     {
         EnsureNotDisposed();
-        fixed (MySqlBindNative* ptr = &bind.Native)
+        fixed (st_mysql_bind* ptr = &bind.Native)
         {
-            int rc = MariadbStmtNative.mysql_stmt_fetch_column(_handle.DangerousGetHandle(), ptr, column, offset);
+            int rc = MariadbStmtNative.mysql_stmt_fetch_column(_handle.AsStructPointer(), ptr, column, offset);
             if (rc != 0) ThrowStmtError();
         }
     }
@@ -185,7 +167,7 @@ public sealed unsafe class MySqlStmt : IDisposable
     public void Reset()
     {
         EnsureNotDisposed();
-        int rc = MariadbStmtNative.mysql_stmt_reset(_handle.DangerousGetHandle());
+        int rc = MariadbStmtNative.mysql_stmt_reset(_handle.AsStructPointer());
         if (rc != 0) ThrowStmtError();
     }
 
@@ -201,7 +183,7 @@ public sealed unsafe class MySqlStmt : IDisposable
         get
         {
             EnsureNotDisposed();
-            return MariadbStmtNative.mysql_stmt_field_count(_handle.DangerousGetHandle());
+            return MariadbStmtNative.mysql_stmt_field_count(_handle.AsStructPointer());
         }
     }
 
@@ -209,21 +191,21 @@ public sealed unsafe class MySqlStmt : IDisposable
     public uint ParamCount()
     {
         EnsureNotDisposed();
-        return MariadbStmtNative.mysql_stmt_param_count(_handle.DangerousGetHandle());
+        return MariadbStmtNative.mysql_stmt_param_count(_handle.AsStructPointer());
     }
 
     /// <summary>Rows changed/inserted/deleted. Maps to <c>mysql_stmt_affected_rows</c>.</summary>
     public ulong AffectedRows()
     {
         EnsureNotDisposed();
-        return MariadbStmtNative.mysql_stmt_affected_rows(_handle.DangerousGetHandle());
+        return MariadbStmtNative.mysql_stmt_affected_rows(_handle.AsStructPointer());
     }
 
     /// <summary>Last generated AUTO_INCREMENT value. Maps to <c>mysql_stmt_insert_id</c>.</summary>
     public ulong InsertId()
     {
         EnsureNotDisposed();
-        return MariadbStmtNative.mysql_stmt_insert_id(_handle.DangerousGetHandle());
+        return MariadbStmtNative.mysql_stmt_insert_id(_handle.AsStructPointer());
     }
 
     /// <summary>Number of rows in the result set (valid after <c>StoreResult</c>). Maps to <c>mysql_stmt_num_rows</c>.</summary>
@@ -232,7 +214,7 @@ public sealed unsafe class MySqlStmt : IDisposable
         get
         {
             EnsureNotDisposed();
-            return MariadbStmtNative.mysql_stmt_num_rows(_handle.DangerousGetHandle());
+            return MariadbStmtNative.mysql_stmt_num_rows(_handle.AsStructPointer());
         }
     }
 
@@ -243,29 +225,29 @@ public sealed unsafe class MySqlStmt : IDisposable
     public MySqlResult? ResultMetadata()
     {
         EnsureNotDisposed();
-        var ptr = MariadbStmtNative.mysql_stmt_result_metadata(_handle.DangerousGetHandle());
-        return ptr == IntPtr.Zero ? null : new MySqlResult(new MySqlResultHandle(ptr));
+        var ptr = MariadbStmtNative.mysql_stmt_result_metadata(_handle.AsStructPointer());
+        return (nint)ptr == IntPtr.Zero ? null : new MySqlResult(new MySqlResultHandle(ptr));
     }
 
     /// <summary>Current cursor offset for navigation. Maps to <c>mysql_stmt_row_tell</c>.</summary>
     // public ulong RowTell()
     // {
     //     EnsureNotDisposed();
-    //     return MariadbStmtNative.mysql_stmt_row_tell(_handle.DangerousGetHandle());
+    //     return MariadbStmtNative.mysql_stmt_row_tell(_handle.AsStructPointer());
     // }
 
     // /// <summary>Moves the cursor. Maps to <c>mysql_stmt_row_seek</c>.</summary>
     // public ulong RowSeek(ulong offset)
     // {
     //     EnsureNotDisposed();
-    //     return MariadbStmtNative.mysql_stmt_row_seek(_handle.DangerousGetHandle(), offset);
+    //     return MariadbStmtNative.mysql_stmt_row_seek(_handle.AsStructPointer(), offset);
     // }
 
     /// <summary>Moves to an absolute row offset. Maps to <c>mysql_stmt_data_seek</c>.</summary>
     public void DataSeek(ulong offset)
     {
         EnsureNotDisposed();
-        MariadbStmtNative.mysql_stmt_data_seek(_handle.DangerousGetHandle(), offset);
+        MariadbStmtNative.mysql_stmt_data_seek(_handle.AsStructPointer(), offset);
     }
 
 
@@ -275,7 +257,7 @@ public sealed unsafe class MySqlStmt : IDisposable
     public string Error()
     {
         EnsureNotDisposed();
-        var ptr = MariadbStmtNative.mysql_stmt_error(_handle.DangerousGetHandle());
+        var ptr = MariadbStmtNative.mysql_stmt_error(_handle.AsStructPointer());
         return Utils.GetStringFromPointerBytes(ptr);
     }
 
@@ -283,14 +265,14 @@ public sealed unsafe class MySqlStmt : IDisposable
     public uint Errno()
     {
         EnsureNotDisposed();
-        return MariadbStmtNative.mysql_stmt_errno(_handle.DangerousGetHandle());
+        return MariadbStmtNative.mysql_stmt_errno(_handle.AsStructPointer());
     }
 
     /// <summary>Current SQLSTATE value. Maps to <c>mysql_stmt_sqlstate</c>.</summary>
     public string Sqlstate()
     {
         EnsureNotDisposed();
-        var ptr = MariadbStmtNative.mysql_stmt_sqlstate(_handle.DangerousGetHandle());
+        var ptr = MariadbStmtNative.mysql_stmt_sqlstate(_handle.AsStructPointer());
         return Utils.GetStringFromPointerBytes(ptr);
     }
 
@@ -304,13 +286,13 @@ public sealed unsafe class MySqlStmt : IDisposable
     public bool NextResult()
     {
         EnsureNotDisposed();
-        int rc = MariadbStmtNative.mysql_stmt_next_result(_handle.DangerousGetHandle());
+        int rc = MariadbStmtNative.mysql_stmt_next_result(_handle.AsStructPointer());
         if (rc > 0) ThrowStmtError();
         return rc == 0;
     }
 
 
-    // public uint ParamCount => NativeMariadbStmt.mysql_stmt_param_count(_handle.DangerousGetHandle());
+    // public uint ParamCount => NativeMariadbStmt.mysql_stmt_param_count(_handle.AsStructPointer());
 
 
     #region Helper
@@ -325,9 +307,9 @@ public sealed unsafe class MySqlStmt : IDisposable
 
     private void ThrowStmtError()
     {
-        byte* pMsg = MariadbStmtNative.mysql_stmt_error(_handle.DangerousGetHandle());
-        byte* pState = MariadbStmtNative.mysql_stmt_sqlstate(_handle.DangerousGetHandle());
-        uint errno = MariadbStmtNative.mysql_stmt_errno(_handle.DangerousGetHandle());
+        byte* pMsg = MariadbStmtNative.mysql_stmt_error(_handle.AsStructPointer());
+        byte* pState = MariadbStmtNative.mysql_stmt_sqlstate(_handle.AsStructPointer());
+        uint errno = MariadbStmtNative.mysql_stmt_errno(_handle.AsStructPointer());
         throw new MySqlException(
             Utils.GetStringFromPointerBytes(pMsg),
             (int)errno,

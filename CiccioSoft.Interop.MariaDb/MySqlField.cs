@@ -39,7 +39,7 @@ public sealed class MySqlField
     public bool IsAutoIncrement => (Flags & MariadbComNative.AUTO_INCREMENT_FLAG) != 0;
     public bool IsNumeric => (Flags & MariadbComNative.NUM_FLAG) != 0;
 
-    internal unsafe MySqlField(MySqlFieldNative native)
+    internal unsafe MySqlField(st_mysql_field native)
     {
         Name = Utils.GetStringFromPointerBytes(native.name);
         OrgName = Utils.GetStringFromPointerBytes(native.org_name);

@@ -34,9 +34,9 @@ public sealed class MySqlBindBuilder : IDisposable
             _mySqlBinds[i] = new MySqlBind();
     }
 
-    internal MySqlBindNative[] GetNativeArray()
+    internal st_mysql_bind[] GetNativeArray()
     {
-        var binds = new MySqlBindNative[_count];
+        var binds = new st_mysql_bind[_count];
         for (int i = 0; i < _count; i++)
             binds[i] = _mySqlBinds[i].Native;
         return binds;

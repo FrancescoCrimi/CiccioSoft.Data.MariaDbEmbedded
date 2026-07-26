@@ -13,7 +13,7 @@ namespace CiccioSoft.Interop.MariaDb;
 
 public unsafe sealed class MySqlBind : IDisposable
 {
-    private MySqlBindNative _bind;
+    private st_mysql_bind _bind;
 
     uint[] _length;
     byte[] _isNull;
@@ -30,11 +30,11 @@ public unsafe sealed class MySqlBind : IDisposable
     GCHandle _hLength;
     GCHandle _hIsNull;
 
-    internal ref MySqlBindNative Native => ref _bind;
+    internal ref st_mysql_bind Native => ref _bind;
 
     public MySqlBind()
     {
-        _bind = new MySqlBindNative();
+        _bind = new st_mysql_bind();
 
         _length = new uint[1];
         _isNull = new byte[1];
