@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
     <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PackageLicenseExpression>GPL-2.0-only</PackageLicenseExpression>
   </PropertyGroup>
 
   <PropertyGroup>
