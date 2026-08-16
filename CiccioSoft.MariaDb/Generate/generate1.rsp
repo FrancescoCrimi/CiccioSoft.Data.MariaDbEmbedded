@@ -1,0 +1,82 @@
+# =======================================================
+# Configurazione per ClangSharpPInvokeGenerator
+# Generazione binding MariaDb nativi
+# =======================================================
+
+# File sorgente C/C++ di input
+--file
+../include/mysql.h
+
+
+
+
+
+# Output finale del codice generato
+--output
+../Native
+
+# Namespace C# di destinazione
+--namespace
+CiccioSoft.MariaDb.Native
+
+# Nome della DLL/libreria nativa inserito nei [DllImport] (es. sqlite3)
+--libraryPath
+libmariadb
+
+# Nome della classe statica C# che conterrà i metodi P/Invoke generati
+--methodClassName
+MySqlNative
+
+# Linguaggio del codice sorgente di input da analizzare ('c' o 'c++')
+--language
+c
+
+# Modificatore di accesso per i tipi e metodi C# generati (public/internal)
+--with-access-specifier
+*=internal
+MySqlOption=public
+MySqlFieldTypes=public
+
+# Esclude specifiche funzioni, struct o macro dalla generazione (Sintassi: nome)
+--exclude
+st_mysql
+st_mysql_stmt
+st_mysql_res
+MARIADB_X509_INFO
+
+st_mysql_options
+st_mariadb_methods
+st_mariadb_api
+mariadb_get_charset_by_name
+mariadb_get_charset_by_nr
+mariadb_convert_string
+st_mysql_data
+
+MARIADB_FIELD_ATTR_LAST
+unknown_sqlstate
+IS_PRI_KEY
+IS_NOT_NULL
+IS_BLOB
+IS_NUM
+IS_NUM_FIELD
+INTERNAL_NUM_FIELD
+SET_CLIENT_ERROR
+set_mariadb_error
+CLEAR_CLIENT_ERROR
+mysql_reload
+mariadb_connect
+
+# Rinomina un tipo nativo in un nome C# personalizzato (Sintassi: vecchio=nuovo)
+--remap
+char=byte
+MYSQL_ROW=nint
+enum_field_types=MySqlFieldTypes
+mysql_option=MySqlOption
+
+# Passa opzioni di configurazione avanzate
+--config
+multi-file
+generate-macro-bindings
+latest-codegen
+generate-helper-types
+generate-disable-runtime-marshalling

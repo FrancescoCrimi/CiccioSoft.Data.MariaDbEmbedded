@@ -5,17 +5,18 @@
     <Platform Name="x86" />
   </Configurations>
   
-  <Project Path="CiccioSoft.Interop.MariaDb.Example/CiccioSoft.Interop.MariaDb.Example.csproj" />
-  <Project Path="CiccioSoft.Interop.MariaDb.Tests/CiccioSoft.Interop.MariaDb.Tests.csproj" />
-  <Project Path="CiccioSoft.Interop.MariaDb/CiccioSoft.Interop.MariaDb.csproj" />
+  <Project Path="CiccioSoft.MariaDb.Example/CiccioSoft.MariaDb.Example.csproj" />
+  <Project Path="CiccioSoft.MariaDb.Tests/CiccioSoft.MariaDb.Tests.csproj" />
+  <Project Path="CiccioSoft.MariaDb/CiccioSoft.MariaDb.csproj" />
   <Project Path="CiccioSoft.Data.MariaDb.Tests/CiccioSoft.Data.MariaDb.Tests.csproj" />
   <Project Path="CiccioSoft.Data.MariaDb/CiccioSoft.Data.MariaDb.csproj" />
 
+<!--
   <Project Path="MySqlConnector-2.5.0/src/MySqlConnector/MySqlConnector.csproj" />
   <Project Path="MySqlConnector-2.5.0/src/MySqlConnector.Authentication.Ed25519/MySqlConnector.Authentication.Ed25519.csproj" />
-
   <Project Path="MySqlConnector-2.5.0/tests/MySqlConnector.Tests/MySqlConnector.Tests.csproj" />
   <Project Path="MySqlConnector-2.5.0/tests/Conformance.Tests/Conformance.Tests.csproj" />
   <Project Path="MySqlConnector-2.5.0/tests/IntegrationTests/IntegrationTests.csproj" />
+-->
 
 </Solution>
