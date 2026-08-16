@@ -6,7 +6,10 @@
     <Nullable>enable</Nullable>
     <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <PackageLicenseExpression>GPL-2.0-only</PackageLicenseExpression>
+    <Copyright>Copyright © 2026 Francesco Crimi</Copyright> 
+    <Authors>Francesco Crimi</Authors>
+    <Company>CiccioSoft</Company>
+    <PackageLicenseExpression>LGPL-2.1-or-later</PackageLicenseExpression>
   </PropertyGroup>
 
   <PropertyGroup>
