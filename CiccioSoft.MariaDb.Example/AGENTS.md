@@ -1,13 +1,13 @@
 ---
-name: CiccioSoft.Interop.MariaDb.Example
-description: "Istruzioni specifiche per il progetto di esempio che usa l’Interop layer."
+name: CiccioSoft.MariaDb.Example
+description: "Istruzioni specifiche per il progetto di esempio che usa CiccioSoft.MariaDb layer."
 ---
 
-# Istruzioni per il progetto CiccioSoft.Interop.MariaDb.Example
+# Istruzioni per il progetto CiccioSoft.MariaDb.Example
 
 ## Scopo
 
-- Questo progetto è un esempio di utilizzo del layer `CiccioSoft.Interop.MariaDb`.
+- Questo progetto è un esempio di utilizzo del layer `CiccioSoft.MariaDb`.
 - Serve a mostrare come aprire connessioni native e usare l’API di base.
 
 ## Cose importanti
@@ -18,7 +18,7 @@ description: "Istruzioni specifiche per il progetto di esempio che usa l’Inter
 ## Comandi utili
 
 - Eseguire l’esempio:
-  - `dotnet run --project CiccioSoft.Interop.MariaDb.Example/CiccioSoft.Interop.MariaDb.Example.csproj`
+  - `dotnet run --project CiccioSoft.MariaDb.Example/CiccioSoft.MariaDb.Example.csproj`
 
 ## Lingua
 

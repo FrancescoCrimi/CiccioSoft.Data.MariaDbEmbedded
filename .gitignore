@@ -486,3 +486,6 @@ $RECYCLE.BIN/
 MySqlConnector-2.5.0/
 
 Native.zip
+
+CiccioSoft.MariaDb.Example/libmariadb.dll
+CiccioSoft.MariaDb.Example/plugin/*

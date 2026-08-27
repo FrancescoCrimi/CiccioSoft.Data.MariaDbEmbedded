@@ -7,6 +7,10 @@
 --file
 ../include/mysql.h
 
+# header license
+--headerFile
+license.txt
+
 
 
 

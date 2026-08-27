@@ -7,14 +7,14 @@ description: "Istruzioni specifiche per il progetto ADO.NET provider."
 
 ## Scopo
 
-- Questo progetto implementa il provider ADO.NET basato su `CiccioSoft.Interop.MariaDb`.
+- Questo progetto implementa il provider ADO.NET basato su `CiccioSoft.MariaDb`.
 - Fornisce classi come `MariaDbConnection`, `MariaDbCommand`, `MariaDbDataReader`, `MariaDbParameter` e `MariaDbTransaction`.
 - Deve offrire un’esperienza .NET idiomatica e compatibile con ADO.NET.
 
 ## Cose importanti
 
 - Mantieni l’interfaccia pubblica fedele alle convenzioni ADO.NET.
-- Evita di duplicare la logica che appartiene al livello interop; delega le operazioni native a `CiccioSoft.Interop.MariaDb`.
+- Evita di duplicare la logica che appartiene al livello interop; delega le operazioni native a `CiccioSoft.MariaDb`.
 - Aggiorna `README.md` e `GUIDELINES.md` quando cambi l’API pubblica o il comportamento di connessioni/transazioni.
 
 ## Comandi utili
